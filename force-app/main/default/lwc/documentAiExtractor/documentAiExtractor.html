@@ -1,0 +1,71 @@
+<template>
+    <lightning-card title="Document AI Extractor" icon-name="standard:document">
+        <div class="slds-var-p-horizontal_medium">
+            <p class="slds-text-color_weak slds-var-m-bottom_small">
+                Config: <strong>{configName}</strong>
+            </p>
+
+            <lightning-file-upload
+                label="Upload document"
+                accept={acceptedFormats}
+                onuploadfinished={handleUploadFinished}
+            ></lightning-file-upload>
+
+            <template lwc:if={fileName}>
+                <p class="slds-var-m-top_small">
+                    <lightning-icon icon-name="doctype:attachment" size="x-small"></lightning-icon>
+                    {fileName}
+                </p>
+            </template>
+
+            <div class="slds-var-m-top_medium">
+                <lightning-button
+                    variant="brand"
+                    label="Extract"
+                    onclick={handleExtract}
+                    disabled={isExtractDisabled}
+                ></lightning-button>
+            </div>
+
+            <template lwc:if={isLoading}>
+                <div class="slds-is-relative slds-var-m-vertical_large spinner-area">
+                    <lightning-spinner alternative-text="Extracting data" size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <template lwc:if={errorMessage}>
+                <div class="slds-var-m-top_medium slds-text-color_error" role="alert">{errorMessage}</div>
+            </template>
+
+            <template lwc:if={hasResult}>
+                <h3 class="slds-text-heading_small slds-var-m-top_large slds-var-m-bottom_x-small">
+                    Extracted fields
+                </h3>
+                <lightning-datatable
+                    key-field="name"
+                    data={fieldRows}
+                    columns={fieldColumns}
+                    hide-checkbox-column
+                ></lightning-datatable>
+
+                <template for:each={tables} for:item="tbl">
+                    <div key={tbl.name} class="slds-var-m-top_large">
+                        <h3 class="slds-text-heading_small slds-var-m-bottom_x-small">{tbl.name}</h3>
+                        <lightning-datatable
+                            key-field="rowId"
+                            data={tbl.rows}
+                            columns={tbl.columns}
+                            hide-checkbox-column
+                        ></lightning-datatable>
+                    </div>
+                </template>
+
+                <lightning-accordion allow-multiple-sections-open class="slds-var-m-top_large">
+                    <lightning-accordion-section name="raw" label="Raw JSON">
+                        <pre class="raw-json">{rawJson}</pre>
+                    </lightning-accordion-section>
+                </lightning-accordion>
+            </template>
+        </div>
+    </lightning-card>
+</template>
