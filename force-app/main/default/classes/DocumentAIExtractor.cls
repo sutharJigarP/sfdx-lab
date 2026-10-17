@@ -1,28 +1,6 @@
 public with sharing class DocumentAIExtractor {
 
-    // Named Credential URL ends at /services/data, so the version and path are appended below
     private static final String NAMED_CREDENTIAL = 'Document_AI_Named_Cred';
-
-    public class DocumentAIException extends Exception {}
-
-    /** Returns the active Document_AI_Callout_Config__mdt record (API version, endpoint path, timeout). */
-    @TestVisible
-    private static Document_AI_Callout_Config__mdt getCalloutConfig() {
-        for (Document_AI_Callout_Config__mdt cfg : Document_AI_Callout_Config__mdt.getAll().values()) {
-            if (cfg.Active__c) {
-                System.debug('DocAI >> using callout config: ' + cfg.DeveloperName
-                    + ' (' + cfg.API_Version__c + ', ' + cfg.Extract_Data_Endpoint_Path__c + ')');
-                return cfg;
-            }
-        }
-        throw new DocumentAIException('No active Document AI Callout Config record found.');
-    }
-
-    public class Result {
-        @AuraEnabled public Boolean success = false;
-        @AuraEnabled public String  extractedDataJson;
-        @AuraEnabled public String  errorMessage;
-    }
 
     /**
      * Called from the LWC. Errors are returned in the Result instead of thrown,
@@ -108,6 +86,27 @@ public with sharing class DocumentAIExtractor {
             throw new DocumentAIException('Document AI extract-data failed (HTTP ' + status + '): ' + httpRes.getBody());
         }
         return parseResponse(httpRes.getBody());
+    }
+
+    public class DocumentAIException extends Exception {}
+
+    public class Result {
+        @AuraEnabled public Boolean success = false;
+        @AuraEnabled public String  extractedDataJson;
+        @AuraEnabled public String  errorMessage;
+    }
+
+    /** Returns the active Document_AI_Callout_Config__mdt record (API version, endpoint path, timeout). */
+    @TestVisible
+    private static Document_AI_Callout_Config__mdt getCalloutConfig() {
+        for (Document_AI_Callout_Config__mdt cfg : Document_AI_Callout_Config__mdt.getAll().values()) {
+            if (cfg.Active__c) {
+                System.debug('DocAI >> using callout config: ' + cfg.DeveloperName
+                    + ' (' + cfg.API_Version__c + ', ' + cfg.Extract_Data_Endpoint_Path__c + ')');
+                return cfg;
+            }
+        }
+        throw new DocumentAIException('No active Document AI Callout Config record found.');
     }
 
     /**
