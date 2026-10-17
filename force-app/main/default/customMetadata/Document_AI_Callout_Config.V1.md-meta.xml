@@ -22,8 +22,4 @@
         <field>Timeout_in_Millisecond__c</field>
         <value xsi:type="xsd:double">120000.0</value>
     </values>
-    <values>
-        <field>Timeout_in__c</field>
-        <value xsi:type="xsd:double">120000.0</value>
-    </values>
 </CustomMetadata>
