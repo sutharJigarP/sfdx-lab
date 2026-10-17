@@ -15,6 +15,14 @@
         <value xsi:type="xsd:string">ssot/document-processing/actions/extract-data</value>
     </values>
     <values>
+        <field>Named_Cred_API_Name__c</field>
+        <value xsi:type="xsd:string">Document_AI_Named_Cred</value>
+    </values>
+    <values>
+        <field>Timeout_in_Millisecond__c</field>
+        <value xsi:type="xsd:double">120000.0</value>
+    </values>
+    <values>
         <field>Timeout_in__c</field>
         <value xsi:type="xsd:double">120000.0</value>
     </values>
